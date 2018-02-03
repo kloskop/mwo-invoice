@@ -13,21 +13,26 @@ public abstract class Product {
 		this.name = name;
 		this.price = price;
 		this.taxPercent = tax;
+		
+		if (name==""||name==null||price==null){
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public String getName() {
-		return null;
+		return name;
 	}
 
 	public BigDecimal getPrice() {
-		return null;
+		return price;
 	}
 
 	public BigDecimal getTaxPercent() {
-		return null;
+		return taxPercent;
 	}
 
 	public BigDecimal getPriceWithTax() {
+		BigDecimal priceWithTax=price.add(price.multiply(taxPercent));
 		return null;
 	}
 }
