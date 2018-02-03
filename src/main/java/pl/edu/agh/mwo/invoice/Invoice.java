@@ -8,27 +8,39 @@ import java.util.Collection;
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
-	private Collection<Product> grossValue;
+	private Collection<Product> products;
 	private BigDecimal netValue;
 	private BigDecimal tax;
-	private BigDecimal total;
+	private BigDecimal grossValue;
 	private LocalDate date;
+	private static int number=0;
 	
-	Invoice(){
+	Invoice(){ //konstruktor
 		netValue = new BigDecimal(0);
 		tax = new BigDecimal(0);
-		total = new BigDecimal(0);
-		grossValue = new ArrayList<Product>();
-		
+		grossValue = new BigDecimal(0);
+		products = new ArrayList<Product>();
+		date=LocalDate.now();
+		number+=1;
 	}
 
 	public void addProduct(Product product) {
-		grossValue.add(product);
-		update(); //odświeżanie wartości subtotal, tax, total, date
-	}
+		products.add(product);
+		update();
+		}
+	
+		
+		 //odświeżanie wartości subtotal, tax, total, date
+	
 
 	public void addProduct(Product product, Integer quantity) {
-		// TODO: implement
+		if (quantity <=0){
+			throw new IllegalArgumentException();
+		}
+		for (int i=0;i<quantity;i++){
+			products.add(product);
+		}
+		update();
 	}
 
 	public BigDecimal getNetValue() { //getter
@@ -40,22 +52,27 @@ public class Invoice {
 	}
 
 	public BigDecimal getGrossValue() { //getter
-		return total;
+		return grossValue;
+	}	
+	public static int getNumber(){
+		return number;
 	}
+	
+	
 	public void setGrossValue(){ //setter
-		total = BigDecimal.ZERO;
-		for (Product product:grossValue){
-			total=total.add(product.getPriceWithTax());
+		grossValue = BigDecimal.ZERO;
+		for (Product product:products){
+			grossValue=grossValue.add(product.getPriceWithTax());
 		}
 		
 	}
 	public void setNetValue(){ //setter
 		netValue = BigDecimal.ZERO;
-		for(Product product:grossValue){
+		for(Product product:products){
 			netValue=netValue.add(product.getPrice());
 	}}
 	public void setTax(){ //setter
-		tax = total.subtract(netValue);
+		tax = grossValue.subtract(netValue);
 	}
 		
 	public void update(){
