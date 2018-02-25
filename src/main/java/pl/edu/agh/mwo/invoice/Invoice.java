@@ -3,16 +3,25 @@ package pl.edu.agh.mwo.invoice;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
 	private Map<Product, Integer> products = new HashMap<Product, Integer>();
-
+	public final int number;
+	public static int counter;
+	
+	public Invoice(){
+		 number=counter;
+		 counter+=1;
+	}
+	
+	
 	public void addProduct(Product product) {
 		addProduct(product, 1);
 	}
-
+    
 	public void addProduct(Product product, Integer quantity) {
 		if (product == null || quantity <= 0) {
 			throw new IllegalArgumentException();
@@ -32,13 +41,17 @@ public class Invoice {
 	public BigDecimal getTaxTotal() {
 		return getGrossTotal().subtract(getNetTotal());
 	}
-
-	public BigDecimal getGrossTotal() {
+	
+    public BigDecimal getGrossTotal() {
 		BigDecimal totalGross = BigDecimal.ZERO;
 		for (Product product : products.keySet()) {
 			BigDecimal quantity = new BigDecimal(products.get(product));
 			totalGross = totalGross.add(product.getPriceWithTax().multiply(quantity));
 		}
 		return totalGross;
+	}
+
+	public int getNumber() {
+		return number;
 	}
 }

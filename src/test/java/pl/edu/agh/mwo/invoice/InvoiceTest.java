@@ -16,9 +16,11 @@ import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
 public class InvoiceTest {
 	private Invoice invoice;
 
+
 	@Before
 	public void createEmptyInvoiceForTheTest() {
 		invoice = new Invoice();
+		
 	}
 
 	@Test
@@ -95,6 +97,35 @@ public class InvoiceTest {
 		Assert.assertThat(new BigDecimal("54.70"), Matchers.comparesEqualTo(invoice.getGrossTotal()));
 	}
 
+	
+	@Test
+	public void testInvoiceHasNumberGreaterThanZero(){
+		int number = invoice.getNumber();
+		Assert.assertThat(number, Matchers.greaterThan(0));
+	}
+	
+	@Test
+	public void testTwoInvoicesHaveDifferentNumbers(){
+		int number = invoice.getNumber();
+		int number2 = new Invoice().getNumber();
+		Assert.assertNotEquals(number, number2);
+	}
+	
+	@Test
+	public void testTheSameInvoiceHasTheSameNumber(){
+		int number = invoice.getNumber();
+		int number2 = invoice.getNumber();
+		Assert.assertEquals(number, number2);
+	}
+	
+	@Test
+	public void testNextInvoiceNumbersAreAscending(){
+		int number = invoice.getNumber();
+		int number2 = new Invoice().getNumber();
+		int diff = 1;
+		Assert.assertThat(diff, Matchers.comparesEqualTo(number2-number));
+	}
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvoiceWithZeroQuantity() {
 		invoice.addProduct(new TaxFreeProduct("Tablet", new BigDecimal("1678")), 0);
