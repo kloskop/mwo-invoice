@@ -126,13 +126,35 @@ public class InvoiceTest {
 		Assert.assertThat(diff, Matchers.comparesEqualTo(number2-number));
 	}
 	
+	@Test
+	public void testNumberAvialableOnPrint(){
+	String printed = invoice.preparePrint();
+	String number = String.valueOf(invoice.getNumber());
+	Assert.assertThat(printed, Matchers.containsString(number));
+	}
+	
+	@Test
+	public void testProductAvialableOnPrint(){
+	invoice.addProduct(new OtherProduct("Oscypek", new BigDecimal("10")),1 );
+	String printed = invoice.preparePrint();	
+	Assert.assertThat(printed, Matchers.containsString("Oscypek 10"));
+	}
+	
+	/*@Test
+	public void testProperLastLineOnPrint(){
+		
+	}
+	*/
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvoiceWithZeroQuantity() {
 		invoice.addProduct(new TaxFreeProduct("Tablet", new BigDecimal("1678")), 0);
 	}
-
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvoiceWithNegativeQuantity() {
 		invoice.addProduct(new DairyProduct("Zsiadle mleko", new BigDecimal("5.55")), -1);
 	}
+	
+	
 }

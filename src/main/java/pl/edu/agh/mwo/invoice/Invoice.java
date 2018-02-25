@@ -52,6 +52,19 @@ public class Invoice {
 	}
 
 	public int getNumber() {
+		
 		return number;
+	}
+
+
+	public String preparePrint() {
+		String toPrint = String.valueOf(number);
+		for (Product product : products.keySet()){
+			toPrint += products.get(product);
+			toPrint += product.getName()+" ";
+			toPrint += product.getPrice();
+		}
+	   
+		return toPrint;
 	}
 }
